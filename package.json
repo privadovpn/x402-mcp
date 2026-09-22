@@ -1,0 +1,62 @@
+{
+  "name": "@privadovpn/x402-mcp",
+  "version": "1.0.0",
+  "description": "Local MCP server that signs x402 USDC payments (Solana, EVM) to buy PrivadoVPN access",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "bin": {
+    "privadovpn-x402-mcp": "./dist/index.js"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "engines": { "node": ">=20" },
+  "license": "MIT",
+  "author": "Omicron Media, Inc.",
+  "homepage": "https://x402.privadovpn.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/privadovpn/x402-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/privadovpn/x402-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "x402",
+    "solana",
+    "usdc",
+    "base",
+    "agentic-payments",
+    "vpn",
+    "privadovpn"
+  ],
+  "mcpName": "io.github.privadovpn/x402-mcp",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.4",
+    "bs58": "^6.0.0",
+    "viem": "^2.31.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.0"
+  }
+}
