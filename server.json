@@ -1,0 +1,60 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.privadovpn/x402-mcp",
+  "title": "PrivadoVPN x402 Payer",
+  "description": "Local MCP server that signs x402 USDC payments (Solana, EVM) to buy PrivadoVPN access",
+  "version": "1.0.0",
+  "websiteUrl": "https://x402.privadovpn.com",
+  "repository": {
+    "url": "https://github.com/privadovpn/x402-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@privadovpn/x402-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SOLANA_PRIVATE_KEY",
+          "description": "Base58-encoded Solana secret key used to sign and pay in SPL USDC. At least one of SOLANA_PRIVATE_KEY or EVM_PRIVATE_KEY is required.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "EVM_PRIVATE_KEY",
+          "description": "Hex-encoded EVM private key used to sign EIP-3009 USDC authorizations. At least one of SOLANA_PRIVATE_KEY or EVM_PRIVATE_KEY is required.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "PREFERRED_NETWORK",
+          "description": "Which network to prefer when a quote offers both. Accepts 'solana' or 'evm' ('eip155' is an accepted alias for 'evm'). Defaults to 'solana' if SOLANA_PRIVATE_KEY is set, else 'evm'.",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "X402_BASE_URL",
+          "description": "Base URL of the x402 payment backend used for catalog, quote, and fulfillment requests. Defaults to https://x402.privadovpn.com.",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "SOLANA_RPC_URL",
+          "description": "Solana RPC endpoint used to check balances and broadcast transactions. Defaults to https://api.mainnet-beta.solana.com.",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "EVM_RPC_URL",
+          "description": "EVM RPC endpoint used to check balances and broadcast transactions. Required for EVM payments.",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

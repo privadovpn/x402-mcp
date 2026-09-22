@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.env
+.env.*
+*.log
+npm-debug.log*
+.DS_Store
+coverage/
+
+# AI / agent artifacts — must never be committed to this repo
+CLAUDE.md
+.claude/
+.beads/
+AGENTS.md
+.cursor/
+.cursorrules
+.windsurfrules
+.aider*
+.continue/
+GEMINI.md
+.copilot*
+*.prompt.md

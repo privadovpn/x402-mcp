@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "privadovpn-x402-mcp": {
+      "command": "npx",
+      "args": ["-y", "@privadovpn/x402-mcp"],
+      "env": {
+        "SOLANA_PRIVATE_KEY": "<your-base58-key>"
+      }
+    }
+  }
+}
