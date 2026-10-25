@@ -2,6 +2,8 @@ export interface DiscoveryPlan {
   id: string;
   price_usd: number;
   duration_minutes: number;
+  services?: string[];
+  port?: number;
 }
 
 export interface VpnCatalog {
@@ -25,11 +27,20 @@ export async function fetchVpnCatalog(baseUrl: string): Promise<VpnCatalog> {
 
   const resources = body.resources as Array<Record<string, unknown>> | undefined;
   const plansRaw = (resources?.[0]?.plans ?? []) as Array<Record<string, unknown>>;
-  const plans: DiscoveryPlan[] = plansRaw.map((p) => ({
-    id: String(p.id),
-    price_usd: Number(p.price_usd),
-    duration_minutes: Number(p.duration_minutes),
-  }));
+  const plans: DiscoveryPlan[] = plansRaw.map((p) => {
+    const plan: DiscoveryPlan = {
+      id: String(p.id),
+      price_usd: Number(p.price_usd),
+      duration_minutes: Number(p.duration_minutes),
+    };
+    if (Array.isArray(p.services)) {
+      plan.services = (p.services as unknown[]).map((s) => String(s));
+    }
+    if (p.port !== undefined) {
+      plan.port = Number(p.port);
+    }
+    return plan;
+  });
 
   const countries = Array.isArray(body.countries)
     ? (body.countries as unknown[]).map((c) => String(c).toUpperCase()).sort()

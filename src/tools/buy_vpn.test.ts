@@ -136,6 +136,102 @@ describe("buyVpn", () => {
     ).rejects.toThrow(/DO NOT call buy_vpn again[\s\S]*fulfill_payment[\s\S]*inv-paid/i);
   });
 
+  it("supports a new pricing-tier plan id with no client-side changes", async () => {
+    const fetchQuote = vi.fn(async () => ({
+      status: 402,
+      body: {},
+      paymentRequired: {
+        x402Version: 2,
+        invoice_no: "inv-d1",
+        accepts: [
+          {
+            scheme: "exact",
+            network: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+            amount: "990000",
+            asset: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            payTo: "PayTo1111111111111111111111111111111111111",
+            maxTimeoutSeconds: 600,
+            invoiceNo: "inv-d1",
+          },
+        ],
+      },
+    }));
+    const signAndPay = vi.fn(async () => ({
+      payment_signature: "sig",
+      settlement_tx: "txid",
+      network: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+      amount: "990000",
+      payTo: "PayTo1111111111111111111111111111111111111",
+      invoiceNo: "inv-d1",
+    }));
+    const fulfillPayment = vi.fn(async () => ({
+      vpn: { username: "u", password: "p" },
+    }));
+    const saveCredentials = vi.fn(() => "/tmp/vpn-d1.json");
+
+    const result = await buyVpn({
+      plan: "PREMIUMD1",
+      config: cfg,
+      deps: { fetchQuote, fulfillPayment, signAndPay, saveCredentials },
+    });
+
+    expect(fetchQuote).toHaveBeenCalledWith(cfg.baseUrl, "PREMIUMD1", undefined);
+    expect(result.vpn).toEqual({ username: "u", password: "p" });
+    expect(result.credentials_path).toBe("/tmp/vpn-d1.json");
+  });
+
+  it("passes through socks5 credential fields untouched when the plan includes SOCKS5", async () => {
+    const fetchQuote = vi.fn(async () => ({
+      status: 402,
+      body: {},
+      paymentRequired: {
+        x402Version: 2,
+        invoice_no: "inv-socks5",
+        accepts: [
+          {
+            scheme: "exact",
+            network: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+            amount: "50000",
+            asset: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+            payTo: "PayTo1111111111111111111111111111111111111",
+            maxTimeoutSeconds: 600,
+            invoiceNo: "inv-socks5",
+          },
+        ],
+      },
+    }));
+    const signAndPay = vi.fn(async () => ({
+      payment_signature: "sig",
+      settlement_tx: "txid",
+      network: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+      amount: "50000",
+      payTo: "PayTo1111111111111111111111111111111111111",
+      invoiceNo: "inv-socks5",
+    }));
+    const fulfillPayment = vi.fn(async () => ({
+      vpn: {
+        port: 3128,
+        connection_string: "https://user:pass@1.2.3.4:3128",
+        socks5_port: 3128,
+        socks5_connection_string: "socks5://user:pass@1.2.3.4:3128",
+      },
+    }));
+    const saveCredentials = vi.fn(() => "/tmp/vpn-m15.json");
+
+    const result = await buyVpn({
+      plan: "PREMIUMM15",
+      config: cfg,
+      deps: { fetchQuote, fulfillPayment, signAndPay, saveCredentials },
+    });
+
+    expect(result.vpn).toEqual({
+      port: 3128,
+      connection_string: "https://user:pass@1.2.3.4:3128",
+      socks5_port: 3128,
+      socks5_connection_string: "socks5://user:pass@1.2.3.4:3128",
+    });
+  });
+
   it("refuses to pay when quote has no invoice_no", async () => {
     const fetchQuote = vi.fn(async () => ({
       status: 402,

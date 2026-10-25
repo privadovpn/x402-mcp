@@ -38,6 +38,8 @@
     "base",
     "agentic-payments",
     "vpn",
+    "proxy",
+    "socks5",
     "privadovpn"
   ],
   "mcpName": "io.github.privadovpn/x402-mcp",

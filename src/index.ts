@@ -37,7 +37,7 @@ async function main(): Promise<void> {
 
   server.tool(
     "list_vpn_catalog",
-    "List purchasable VPN plans (id, USD price, duration) and supported server country codes from X402_BASE_URL discovery.",
+    "List purchasable VPN plans (id, USD price, duration) and supported server country codes from X402_BASE_URL discovery. Each plan's `services` array indicates which protocols it includes (e.g. http_proxy, socks5_proxy) — check it before telling a user which plan to buy for SOCKS5 access.",
     {},
     async () => ({
       content: [{ type: "text", text: JSON.stringify(await listVpnCatalog({ config }), null, 2) }],
@@ -65,7 +65,7 @@ async function main(): Promise<void> {
 
   server.tool(
     "buy_vpn",
-    "PREFERRED. Buy VPN in one call: quote → pay on-chain → fulfill → save credentials. Call ONCE per purchase. Do not use curl/shell against /pay. Do not call dry_run then buy again (each quote creates a new invoice). If this errors after payment, call fulfill_payment with the recovery fields from the error — never retry buy_vpn.",
+    "PREFERRED. Buy VPN in one call: quote → pay on-chain → fulfill → save credentials. Call ONCE per purchase. Do not use curl/shell against /pay. Do not call dry_run then buy again (each quote creates a new invoice). If this errors after payment, call fulfill_payment with the recovery fields from the error — never retry buy_vpn. One purchase covers every service the plan includes: the result's `vpn` object has `port`/`connection_string` for the HTTP proxy, and `socks5_port`/`socks5_connection_string` (same username/password) when the plan includes SOCKS5 — check list_vpn_catalog's `services` field beforehand.",
     {
       plan: z.string(),
       country: z.string().optional(),
@@ -86,7 +86,7 @@ async function main(): Promise<void> {
 
   server.tool(
     "fulfill_payment",
-    "Recovery only: exchange an already-broadcast payment for VPN credentials. Requires plan, invoice_no, payment_signature, settlement_tx from a prior buy_vpn/sign_and_pay. Does not create a new invoice or send money. Use when fulfill failed after payment — never call buy_vpn again.",
+    "Recovery only: exchange an already-broadcast payment for VPN credentials. Requires plan, invoice_no, payment_signature, settlement_tx from a prior buy_vpn/sign_and_pay. Does not create a new invoice or send money. Use when fulfill failed after payment — never call buy_vpn again. Returns the same `vpn` credential shape as buy_vpn, including socks5_port/socks5_connection_string when the plan includes SOCKS5.",
     {
       plan: z.string(),
       invoice_no: z.string(),
