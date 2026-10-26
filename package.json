@@ -1,6 +1,6 @@
 {
   "name": "@privadovpn/x402-mcp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Local MCP server that signs x402 USDC payments (Solana, EVM) to buy PrivadoVPN access",
   "type": "module",
   "main": "./dist/index.js",
