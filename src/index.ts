@@ -24,7 +24,7 @@ const PaymentAcceptSchema = z.object({
 
 async function main(): Promise<void> {
   const config = loadConfig();
-  const server = new McpServer({ name: "privadovpn-x402-mcp", version: "1.0.0" });
+  const server = new McpServer({ name: "privadovpn-x402-mcp", version: "1.1.0" });
 
   server.tool(
     "wallet_status",
