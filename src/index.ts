@@ -17,7 +17,7 @@ const PaymentAcceptSchema = z.object({
   asset: z.string(),
   payTo: z.string(),
   maxTimeoutSeconds: z.number(),
-  extra: z.record(z.string()).optional(),
+  extra: z.record(z.string(), z.string()).optional(),
   invoiceNo: z.string().optional(),
   settlementMode: z.string().optional(),
 });
