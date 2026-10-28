@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+- Fixed `list_vpn_catalog` dropping each plan's `socks5_port` field from the backend's discovery manifest (only `port`, the HTTP proxy port, was being parsed). Updated the tool's description to clarify which port is which.
+
 ## [1.1.0] - 2026-10-26
 
 - Documented the approved six-tier pricing lineup (`PREMIUMM15`, `PREMIUMX1`, `PREMIUMX3`, `PREMIUMD1`, `PREMIUMD7`, `PREMIUMD30`) in the README. No payment-logic changes were needed: plan IDs and prices are already fetched live from the backend and were never hardcoded in this client.
