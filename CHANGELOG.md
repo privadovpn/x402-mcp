@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+- Fixed the MCP server reporting a hardcoded `1.0.0` version to clients regardless of the actual published package version. `version` is now read from `package.json` at startup.
+
 ## [1.1.0] - 2026-10-26
 
 - Documented the approved six-tier pricing lineup (`PREMIUMM15`, `PREMIUMX1`, `PREMIUMX3`, `PREMIUMD1`, `PREMIUMD7`, `PREMIUMD30`) in the README. No payment-logic changes were needed: plan IDs and prices are already fetched live from the backend and were never hardcoded in this client.
