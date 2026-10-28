@@ -1,0 +1,30 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      solanaPrivateKey:
+        type: string
+        title: Solana private key (base58)
+        description: Use a dedicated low-balance wallet. Never a primary wallet.
+      evmPrivateKey:
+        type: string
+        title: EVM private key (hex)
+      preferredNetwork:
+        type: string
+        enum: [solana, evm]
+        default: solana
+      evmRpcUrl:
+        type: string
+        title: EVM RPC URL
+  commandFunction: |-
+    (config) => ({
+      command: "npx",
+      args: ["-y", "@privadovpn/x402-mcp"],
+      env: {
+        SOLANA_PRIVATE_KEY: config.solanaPrivateKey || "",
+        EVM_PRIVATE_KEY: config.evmPrivateKey || "",
+        PREFERRED_NETWORK: config.preferredNetwork || "solana",
+        EVM_RPC_URL: config.evmRpcUrl || ""
+      }
+    })
