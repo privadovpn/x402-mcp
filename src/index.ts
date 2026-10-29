@@ -9,6 +9,7 @@ import { listVpnCatalog } from "./tools/list_vpn_catalog.js";
 import { signAndPay } from "./tools/sign_and_pay.js";
 import { walletStatus } from "./tools/wallet_status.js";
 import type { PaymentAccept } from "./types.js";
+import { getPackageVersion } from "./version.js";
 
 const PaymentAcceptSchema = z.object({
   scheme: z.string(),
@@ -24,7 +25,7 @@ const PaymentAcceptSchema = z.object({
 
 async function main(): Promise<void> {
   const config = loadConfig();
-  const server = new McpServer({ name: "privadovpn-x402-mcp", version: "1.0.0" });
+  const server = new McpServer({ name: "privadovpn-x402-mcp", version: getPackageVersion() });
 
   server.tool(
     "wallet_status",
