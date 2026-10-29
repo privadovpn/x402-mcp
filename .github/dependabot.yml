@@ -1,9 +1,25 @@
 version: 2
+
 updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
       interval: weekly
+
+    groups:
+      minor-and-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+    ignore:
+      - dependency-name: "@solana/web3.js"
+        update-types:
+          - "version-update:semver-major"
+
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
