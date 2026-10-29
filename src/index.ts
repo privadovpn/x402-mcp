@@ -38,7 +38,7 @@ async function main(): Promise<void> {
 
   server.tool(
     "list_vpn_catalog",
-    "List purchasable VPN plans (id, USD price, duration) and supported server country codes from X402_BASE_URL discovery. Each plan's `services` array indicates which protocols it includes (e.g. http_proxy, socks5_proxy) — check it before telling a user which plan to buy for SOCKS5 access.",
+    "List purchasable VPN plans (id, USD price, duration) and supported server country codes from X402_BASE_URL discovery. Each plan's `services` array indicates which protocols it includes (e.g. http_proxy, socks5_proxy); `port` is the HTTP proxy port and `socks5_port` is the SOCKS5 port (both only meaningful for services the plan actually includes) — check these before telling a user which plan to buy for SOCKS5 access.",
     {},
     async () => ({
       content: [{ type: "text", text: JSON.stringify(await listVpnCatalog({ config }), null, 2) }],

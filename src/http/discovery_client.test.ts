@@ -88,7 +88,7 @@ describe("fetchVpnCatalog", () => {
     });
   });
 
-  it("parses per-plan services and port when the backend includes them", async () => {
+  it("parses per-plan services, port, and socks5_port when the backend includes them", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => ({
@@ -108,6 +108,7 @@ describe("fetchVpnCatalog", () => {
                   duration_minutes: 15,
                   services: ["http_proxy", "socks5_proxy"],
                   port: 3128,
+                  socks5_port: 1080,
                 },
               ],
             },
@@ -119,9 +120,10 @@ describe("fetchVpnCatalog", () => {
     const catalog = await fetchVpnCatalog("https://x402.example.com");
     expect(catalog.plans[0].services).toEqual(["http_proxy", "socks5_proxy"]);
     expect(catalog.plans[0].port).toBe(3128);
+    expect(catalog.plans[0].socks5_port).toBe(1080);
   });
 
-  it("omits services/port when the backend doesn't send them", async () => {
+  it("omits services/port/socks5_port when the backend doesn't send them", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => ({
@@ -144,6 +146,7 @@ describe("fetchVpnCatalog", () => {
     const catalog = await fetchVpnCatalog("https://x402.example.com");
     expect(catalog.plans[0].services).toBeUndefined();
     expect(catalog.plans[0].port).toBeUndefined();
+    expect(catalog.plans[0].socks5_port).toBeUndefined();
   });
 
   it("throws on non-ok response", async () => {
