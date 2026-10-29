@@ -4,6 +4,7 @@ export interface DiscoveryPlan {
   duration_minutes: number;
   services?: string[];
   port?: number;
+  socks5_port?: number;
 }
 
 export interface VpnCatalog {
@@ -38,6 +39,9 @@ export async function fetchVpnCatalog(baseUrl: string): Promise<VpnCatalog> {
     }
     if (p.port !== undefined) {
       plan.port = Number(p.port);
+    }
+    if (p.socks5_port !== undefined) {
+      plan.socks5_port = Number(p.socks5_port);
     }
     return plan;
   });
