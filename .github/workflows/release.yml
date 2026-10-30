@@ -41,13 +41,38 @@ jobs:
           jq --arg v "$VERSION" '.version = $v | .packages[0].version = $v' server.json > server.json.tmp
           mv server.json.tmp server.json
 
+      - name: Wait for npm registry propagation
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PKG="@privadovpn/x402-mcp"
+          for i in $(seq 1 24); do
+            status=$(curl -s -o /dev/null -w "%{http_code}" "https://registry.npmjs.org/${PKG}/${VERSION}")
+            if [ "$status" = "200" ]; then
+              echo "npm registry has ${PKG}@${VERSION}"
+              exit 0
+            fi
+            echo "Attempt $i: npm registry not ready yet (HTTP $status), waiting 10s..."
+            sleep 10
+          done
+          echo "::error::npm registry did not return ${PKG}@${VERSION} after 4 minutes"
+          exit 1
+
       - name: Publish to MCP registry
+        id: mcp_publish
+        continue-on-error: true
         run: |
           mcp-publisher login github-oidc
           mcp-publisher publish
 
       - name: Create GitHub Release
+        if: always()
         uses: softprops/action-gh-release@v2
         with:
           body_path: CHANGELOG.md
           generate_release_notes: true
+
+      - name: Fail job if MCP registry publish failed
+        if: steps.mcp_publish.outcome == 'failure'
+        run: |
+          echo "::error::Publish to npm and the GitHub Release both succeeded, but the MCP registry publish failed. Rerun 'mcp-publisher publish' manually once resolved — do not re-run this whole job (npm publish is not re-runnable for this version)."
+          exit 1
