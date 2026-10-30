@@ -3,7 +3,7 @@
   "name": "io.github.privadovpn/x402-mcp",
   "title": "PrivadoVPN x402 Payer",
   "description": "Local MCP server that signs x402 USDC payments (Solana, EVM) to buy PrivadoVPN access",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "websiteUrl": "https://x402.privadovpn.com",
   "repository": {
     "url": "https://github.com/privadovpn/x402-mcp",
@@ -13,7 +13,7 @@
     {
       "registryType": "npm",
       "identifier": "@privadovpn/x402-mcp",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "transport": {
         "type": "stdio"
       },
